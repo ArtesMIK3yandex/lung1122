@@ -1,0 +1,149 @@
+# Lung Segmenter - Конфигурация приложения
+
+# Настройки приложения
+application:
+  name: "Lung Segmenter GUI"
+  version: "6.0.0"
+  window_title: "Lung Segmenter - Модульная версия"
+  window_size: [1600, 900]
+  style: "Fusion"
+
+# Настройки отображения
+display:
+  default_window_center: -600
+  default_window_width: 1500
+  auto_window_enabled: true
+  
+  # Пресеты окон
+  presets:
+    lung:
+      center: -600
+      width: 1500
+    mediastinum:
+      center: 40
+      width: 400
+    bone:
+      center: 400
+      width: 1800
+
+# Цвета для масок разных органов
+organ_colors:
+  lung: "lime"
+  liver: "orange"
+  kidney: "cyan"
+  heart: "red"
+  default: "yellow"
+
+# Настройки сегментации
+segmentation:
+  # Настройки lungmask
+  lungmask:
+    model_name: "R231CovidWeb"
+    batch_size: 20
+    default_use_cpu: false
+  
+  # Общие настройки
+  default_roi_margin: 10
+
+# Параметры постобработки
+processing:
+  # Пресеты для быстрого применения
+  presets:
+    conservative:
+      hu_min: -950
+      hu_max: -350
+      dilation_iter: 1
+      closing_size: 3
+      fill_holes: true
+      description: "Консервативная обработка - минимальные изменения"
+    
+    balanced:
+      hu_min: -1000
+      hu_max: -300
+      dilation_iter: 2
+      closing_size: 3
+      fill_holes: true
+      description: "Сбалансированная обработка - рекомендуется по умолчанию"
+    
+    aggressive:
+      hu_min: -1100
+      hu_max: -250
+      dilation_iter: 4
+      closing_size: 5
+      fill_holes: true
+      description: "Агрессивная обработка - максимальное расширение"
+  
+  # Диапазоны параметров для UI
+  parameter_ranges:
+    hu_min:
+      min: -1200
+      max: -100
+      default: -1000
+    hu_max:
+      min: -900
+      max: 100
+      default: -300
+    dilation_iter:
+      min: 0
+      max: 10
+      default: 2
+    closing_size:
+      min: 1
+      max: 10
+      default: 3
+
+# Настройки интерфейса
+ui:
+  # Размеры панелей
+  panels:
+    control_panel_width: 300
+    refine_panel_width: 350
+  
+  # Режимы интерфейса
+  modes:
+    simplified: true  # По умолчанию упрощенный режим
+    show_advanced_by_default: false
+  
+  # Настройки анимации
+  animation:
+    duration_ms: 250
+    easing: "InOutCubic"
+  
+  # История операций
+  history:
+    max_lines: 100
+    font_family: "Consolas, Monaco, monospace"
+    font_size: 9
+
+# Настройки сохранения
+export:
+  # Формат имени файла по умолчанию
+  filename_template: "{organ}_mask_HU{hu_min}-{hu_max}_dil{dilation}_z{z0}-{z1}.nii"
+  
+  # Настройки NIfTI
+  nifti:
+    use_compression: false
+    prefer_sitk: true  # Использовать SimpleITK, fallback на nibabel
+  
+  # История операций
+  history_export:
+    filename_template: "segmentation_history_{timestamp}.txt"
+    include_parameters: true
+    include_timing: true
+
+# Настройки безопасности и производительности
+performance:
+  # Пороги для предупреждений
+  large_volume_threshold_mb: 500
+  gpu_memory_threshold_mb: 2048
+  
+  # Оптимизации
+  use_multithreading: true
+  max_worker_threads: 4
+
+# Логирование
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  console_output: true
+  file_output: false
+  log_file: "lung_segmenter.log"
