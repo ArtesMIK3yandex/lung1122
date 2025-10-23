@@ -1,12 +1,19 @@
-# ========== gui/widgets/__init__.py ==========
-"""
-Пользовательские виджеты GUI.
-"""
+# gui/widgets/__init__.py
 
-from .roi_selector import ROISelector, ROIManager
+from .status_widget import StatusWidget
+from .segmentation_widget import SegmentationWidget
+from .processing_widget import ProcessingWidget
+from .save_widget import SaveWidget
+from .admin_panel import AdminPanel
+from .projection_manager import ProjectionManager
+from .viewer_widget import ViewerWidget
 
 __all__ = [
-    'ROISelector',
-    'ROIManager'
+    'StatusWidget',
+    'SegmentationWidget',
+    'ProcessingWidget',
+    'SaveWidget',
+    'AdminPanel',
+    'ProjectionManager',
+    'ViewerWidget',
 ]
-

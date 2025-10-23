@@ -11,13 +11,15 @@ from enum import Enum
 
 class UIState(Enum):
     """Возможные состояния приложения."""
-    INITIAL = "initial"  # Начальное состояние, ничего не загружено
-    VOLUME_LOADED = "volume_loaded"  # DICOM загружен
-    ROI_DEFINED = "roi_defined"  # ROI определены
-    SEGMENTING = "segmenting"  # Идет сегментация
-    MASK_READY = "mask_ready"  # Маска готова
-    REFINING = "refining"  # Идет постобработка
-    SAVING = "saving"  # Сохранение файла
+    INITIAL = "initial"
+    VOLUME_LOADED = "volume_loaded"
+    ROI1_DEFINED = "roi1_defined"  # ROI 1 определены
+    ROI2_DEFINED = "roi2_defined"  # ROI 2 определены
+    ROI_DEFINED = "roi_defined"
+    SEGMENTING = "segmenting"
+    MASK_READY = "mask_ready"
+    REFINING = "refining"
+    SAVING = "saving"
 
 
 class UIStateManager:
@@ -91,6 +93,8 @@ class UIStateManager:
         
         if state == UIState.INITIAL:
             self._set_initial_state()
+        elif state == UIState.ROI1_DEFINED:  # ДОБАВЬТЕ ЭТИ ДВЕ СТРОКИ
+            self._set_roi1_defined_state()
         elif state == UIState.VOLUME_LOADED:
             self._set_volume_loaded_state()
         elif state == UIState.ROI_DEFINED:
@@ -139,7 +143,20 @@ class UIStateManager:
         self._set_widget_enabled('slice_slider', True)
         
         self._set_refinement_params_enabled(False)
+    def _set_roi1_defined_state(self) -> None:
+        """ROI 1 определен - доступно рисование ROI 2."""
+        self._set_widget_enabled('btn_load', True)
+        self._set_widget_enabled('btn_draw_roi1', True)
+        self._set_widget_enabled('btn_draw_roi2', True)  # ВОТ ОНО!
+        self._set_widget_enabled('btn_reset_roi', True)
+        self._set_widget_enabled('btn_segment', False)
+        self._set_widget_enabled('btn_apply_refinement', False)
+        self._set_widget_enabled('btn_reset_mask', False)
+        self._set_widget_enabled('btn_save', False)
+        self._set_widget_enabled('slice_slider', True)
     
+        self._set_refinement_params_enabled(False)
+   
     def _set_roi_defined_state(self) -> None:
         """ROI определены - доступна сегментация."""
         self._set_widget_enabled('btn_load', True)
